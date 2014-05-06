@@ -83,7 +83,7 @@ class Festival(object):
             self.say(text)
         
     def wave(self, text=None, source=None, dest=None,
-              wave_type=None, frequency=None, scale=None):
+              wave_type=None, sample_rate=None, scale=None):
         """Uses Festival's text2wave program to generate a wave file object.
         
         Must contain either a text or source_file input (if both are given,
@@ -98,7 +98,7 @@ class Festival(object):
         wave_type - the output waveform type (alaw, ulaw, snd, aiff, riff,
                     nist, etc.  Defaults to the programs default (which is 
                     riff).
-        frequency - the output frequency.  Defaults to program's default.
+        sample_rate - the output sample rate.  Defaults to program's default.
         scale - the volume factor.  Defaults to program's default.
         """
         
@@ -118,15 +118,17 @@ class Festival(object):
         
         # append optional arguments
         if dest != None:
-            args.append("-o "+dest)
+            args.append("-o")
+            args.append("{}".format(dest))
         if wave_type != None:
-            args.append("-mode "+wave_tye)
-        if frequency != None:
-            args.append("-F "+frequency)
+            args.append("-mode")
+            args.append("{}".format(wave_type))
+        if sample_rate != None:
+            args.append("-f")
+            args.append("{}".format(sample_rate))
         if scale != None:
-            args.append("-scale "+scale)
-        
-        print args
+            args.append("-scale")
+            args.append("{}".format(scale))
         
         # opena connection to the file
         p = subprocess.Popen( args, 
@@ -136,6 +138,8 @@ class Festival(object):
                               close_fds = True) 
         stdout, stderr = p.communicate(text) 
         
+        if stderr:
+            print stderr
         # only return a value if the file is not saved.
         if dest == None:
             return stdout
