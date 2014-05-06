@@ -118,15 +118,17 @@ class Festival(object):
         
         # append optional arguments
         if dest != None:
-            args.append("-o "+dest)
+            args.append("-o")
+            args.append("{}".format(dest))
         if wave_type != None:
-            args.append("-mode "+wave_tye)
+            args.append("-mode")
+            args.append("{}".format(wave_type))
         if frequency != None:
-            args.append("-F "+frequency)
+            args.append("-f")
+            args.append("{}".format(frequency))
         if scale != None:
-            args.append("-scale "+scale)
-        
-        print args
+            args.append("-scale")
+            args.append("{}".format(scale))
         
         # opena connection to the file
         p = subprocess.Popen( args, 
@@ -136,6 +138,8 @@ class Festival(object):
                               close_fds = True) 
         stdout, stderr = p.communicate(text) 
         
+        if stderr:
+            print stderr
         # only return a value if the file is not saved.
         if dest == None:
             return stdout
